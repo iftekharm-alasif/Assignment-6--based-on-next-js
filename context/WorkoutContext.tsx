@@ -46,9 +46,10 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
     const storedSaved = localStorage.getItem("fitlog-saved");
     const storedCompleted = localStorage.getItem("fitlog-completed");
 
-    if (storedPlan) {
-      setPlan(JSON.parse(storedPlan));
-    }
+  if (storedPlan) {
+  const parsedPlan: Workout[] = JSON.parse(storedPlan);
+  setPlan(parsedPlan);
+}
 
     if (storedSaved) {
       setSaved(JSON.parse(storedSaved));
