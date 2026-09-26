@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+
 import type { Workout } from "@/types/workout";
 import { useWorkout } from "@/context/WorkoutContext";
 
@@ -14,7 +15,14 @@ const PlanWorkoutCard = ({
   workout,
   saved = false,
 }: PlanWorkoutCardProps) => {
-  const { removeFromPlan, removeFromSaved } = useWorkout();
+  const {
+    removeFromPlan,
+    removeFromSaved,
+    markAsDone,
+    isCompleted,
+  } = useWorkout();
+
+  const completed = isCompleted(workout.id);
 
   const handleRemove = () => {
     if (saved) {
@@ -24,8 +32,18 @@ const PlanWorkoutCard = ({
     }
   };
 
+  const handleMarkAsDone = () => {
+    markAsDone(workout.id);
+  };
+
   return (
-    <article className="border border-white/10 bg-[#171717] p-4">
+    <article
+      className={`border bg-[#171717] p-4 transition ${
+        completed
+          ? "border-[#ccff00]/40"
+          : "border-white/10"
+      }`}
+    >
       <div className="flex gap-4">
         {/* Thumbnail */}
         <div className="relative h-24 w-24 shrink-0 overflow-hidden">
@@ -39,7 +57,13 @@ const PlanWorkoutCard = ({
 
         {/* Content */}
         <div className="min-w-0 flex-1">
-          <h2 className="truncate text-lg font-black uppercase text-white">
+          <h2
+            className={`truncate text-lg font-black uppercase ${
+              completed
+                ? "text-[#ccff00]"
+                : "text-white"
+            }`}
+          >
             {workout.name}
           </h2>
 
@@ -67,9 +91,15 @@ const PlanWorkoutCard = ({
         {!saved && (
           <button
             type="button"
-            className="border border-[#ccff00]/30 px-4 py-2 text-xs font-black uppercase text-[#ccff00] transition hover:bg-[#ccff00] hover:text-black"
+            onClick={handleMarkAsDone}
+            disabled={completed}
+            className={`border px-4 py-2 text-xs font-black uppercase transition ${
+              completed
+                ? "cursor-default border-[#ccff00]/30 bg-[#ccff00]/10 text-[#ccff00]"
+                : "border-[#ccff00]/30 text-[#ccff00] hover:bg-[#ccff00] hover:text-black"
+            }`}
           >
-            Mark as Done
+            {completed ? "✓ Done" : "Mark as Done"}
           </button>
         )}
 
