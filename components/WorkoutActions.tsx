@@ -19,29 +19,39 @@ const WorkoutActions = ({ workout }: WorkoutActionsProps) => {
   const alreadySaved = isSaved(workout.id);
 
   return (
-    <div className="mt-12 flex flex-wrap gap-4">
+    <div className="mt-5 flex flex-wrap gap-3">
+      {/* Add to Plan */}
       <button
+        type="button"
         onClick={() => addToPlan(workout)}
         disabled={alreadyInPlan}
-        className={`px-6 py-3 text-sm font-black uppercase transition ${
+        className={`inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-[11px] font-black uppercase transition ${
           alreadyInPlan
-            ? "cursor-not-allowed bg-white/20 text-white/40"
+            ? "cursor-not-allowed bg-white/10 text-white/30"
             : "bg-[#ccff00] text-black hover:bg-white"
         }`}
       >
-        {alreadyInPlan ? "Already in Plan" : "Add to Today's Plan"}
+        <span>⊞</span>
+
+        {alreadyInPlan
+          ? "Already in plan"
+          : "Add to today's plan"}
       </button>
 
+      {/* Save */}
       <button
+        type="button"
         onClick={() => saveWorkout(workout)}
         disabled={alreadySaved}
-        className={`border px-6 py-3 text-sm font-black uppercase transition ${
+        className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-[11px] font-bold uppercase transition ${
           alreadySaved
             ? "cursor-not-allowed border-white/10 text-white/30"
-            : "border-white/30 text-white hover:border-[#ccff00] hover:text-[#ccff00]"
+            : "border-white/20 text-white/80 hover:border-white/40 hover:text-white"
         }`}
       >
-        {alreadySaved ? "Saved" : "Save for Later"}
+        <span>♡</span>
+
+        {alreadySaved ? "Saved" : "Save for later"}
       </button>
     </div>
   );

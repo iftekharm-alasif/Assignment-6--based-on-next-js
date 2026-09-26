@@ -1,13 +1,17 @@
 "use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useWorkout } from "@/context/WorkoutContext";
 
 const Navbar = () => {
   const pathname = usePathname();
 
+  const { plan, saved } = useWorkout();
+
   return (
-    <nav className="border-b border-white/10 bg-[#111111]">
+   <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#111111]/95 backdrop-blur">
       <div className="mx-auto flex min-h-20 max-w-7xl items-center justify-between px-5 md:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
@@ -55,14 +59,14 @@ const Navbar = () => {
             href="/my-plan"
             className="rounded-full bg-[#ccff00] px-4 py-2 text-xs font-black uppercase tracking-wide text-black"
           >
-            Plan 0
+            Plan {plan.length}
           </Link>
 
           <Link
             href="/my-plan"
             className="rounded-full border border-white/30 px-4 py-2 text-xs font-black uppercase tracking-wide text-white"
           >
-            Saved 0
+            Saved {saved.length}
           </Link>
         </div>
       </div>
