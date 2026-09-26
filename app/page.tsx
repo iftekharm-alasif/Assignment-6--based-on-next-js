@@ -1,24 +1,9 @@
+import { Suspense } from "react";
 import Hero from "@/components/Hero";
-import WorkoutCard from "@/components/WorkoutCard";
-import type { Workout } from "@/types/workout";
+import WorkoutSkeleton from "@/components/WorkoutSkeleton";
+import WorkoutLibrary from "@/components/WorkoutLibrary";
 
-const API_URL = "https://api.abcz.workers.dev/api/fitlog";
-
-async function getWorkouts(): Promise<Workout[]> {
-  const response = await fetch(API_URL, {
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch workouts");
-  }
-
-  return response.json();
-}
-
-export default async function Home() {
-  const workouts = await getWorkouts();
-
+export default function Home() {
   return (
     <main>
       <Hero />
@@ -44,12 +29,10 @@ export default async function Home() {
             </p>
           </div>
 
-          {/* Workout Grid */}
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {workouts.map((workout) => (
-              <WorkoutCard key={workout.id} workout={workout} />
-            ))}
-          </div>
+          {/* Workout Loading */}
+          <Suspense fallback={<WorkoutSkeleton />}>
+            <WorkoutLibrary />
+          </Suspense>
         </div>
       </section>
     </main>
