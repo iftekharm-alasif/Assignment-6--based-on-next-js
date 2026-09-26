@@ -1,5 +1,5 @@
-import WorkoutCard from "@/components/WorkoutCard";
 import type { Workout } from "@/types/workout";
+import WorkoutSorter from "@/components/WorkoutSorter";
 
 const API_URL = "https://api.api-store.workers.dev/api/fitlog";
 
@@ -18,11 +18,5 @@ async function getWorkouts(): Promise<Workout[]> {
 export default async function WorkoutLibrary() {
   const workouts = await getWorkouts();
 
-  return (
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {workouts.map((workout) => (
-        <WorkoutCard key={workout.id} workout={workout} />
-      ))}
-    </div>
-  );
+  return <WorkoutSorter workouts={workouts} />;
 }
