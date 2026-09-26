@@ -3,6 +3,7 @@
 import {
   createContext,
   useContext,
+  useEffect,
   useState,
   type ReactNode,
 } from "react";
@@ -35,6 +36,55 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
   const [plan, setPlan] = useState<Workout[]>([]);
   const [saved, setSaved] = useState<Workout[]>([]);
   const [completed, setCompleted] = useState<number[]>([]);
+
+  // Track whether localStorage data has been loaded
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Load data from localStorage
+  useEffect(() => {
+    const storedPlan = localStorage.getItem("fitlog-plan");
+    const storedSaved = localStorage.getItem("fitlog-saved");
+    const storedCompleted = localStorage.getItem("fitlog-completed");
+
+    if (storedPlan) {
+      setPlan(JSON.parse(storedPlan));
+    }
+
+    if (storedSaved) {
+      setSaved(JSON.parse(storedSaved));
+    }
+
+    if (storedCompleted) {
+      setCompleted(JSON.parse(storedCompleted));
+    }
+
+    // Loading finished
+    setIsLoaded(true);
+  }, []);
+
+  // Save plan after localStorage has loaded
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    localStorage.setItem("fitlog-plan", JSON.stringify(plan));
+  }, [plan, isLoaded]);
+
+  // Save saved workouts
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    localStorage.setItem("fitlog-saved", JSON.stringify(saved));
+  }, [saved, isLoaded]);
+
+  // Save completed workouts
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    localStorage.setItem(
+      "fitlog-completed",
+      JSON.stringify(completed)
+    );
+  }, [completed, isLoaded]);
 
   // Add workout to today's plan
   const addToPlan = (workout: Workout) => {
@@ -87,7 +137,7 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  // Check if workout is completed
+  // Check completed status
   const isCompleted = (id: number) => {
     return completed.includes(id);
   };
