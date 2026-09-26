@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import type { Workout } from "@/types/workout";
 import WorkoutActions from "@/components/WorkoutActions";
 
-const API_URL = "https://api.abcz.workers.dev/api/fitlog";
+const API_URL = "https://api.api-store.workers.dev/api/fitlog";
 
 interface WorkoutDetailsPageProps {
   params: Promise<{
