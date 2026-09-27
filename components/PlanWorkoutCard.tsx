@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import type { Workout } from "@/types/workout";
+
 import { useWorkout } from "@/context/WorkoutContext";
 
 interface PlanWorkoutCardProps {
@@ -20,6 +21,7 @@ const PlanWorkoutCard = ({
     removeFromSaved,
     markAsDone,
     isCompleted,
+    showToast,
   } = useWorkout();
 
   const completed = isCompleted(workout.id);
@@ -27,13 +29,16 @@ const PlanWorkoutCard = ({
   const handleRemove = () => {
     if (saved) {
       removeFromSaved(workout.id);
+      showToast("Workout removed from saved");
     } else {
       removeFromPlan(workout.id);
+      showToast("Workout removed from plan");
     }
   };
 
   const handleMarkAsDone = () => {
     markAsDone(workout.id);
+    showToast("Workout marked as done");
   };
 
   return (

@@ -22,6 +22,7 @@ interface WorkoutContextType {
   isCompleted: (id: number) => boolean;
   isInPlan: (id: number) => boolean;
   isSaved: (id: number) => boolean;
+  showToast: (message: string) => void;
 }
 
 const WorkoutContext = createContext<
@@ -37,14 +38,17 @@ export function WorkoutProvider({
   const [saved, setSaved] = useState<Workout[]>([]);
   const [completed, setCompleted] = useState<number[]>([]);
 
-  // Track whether localStorage data has been loaded
   const [isLoaded, setIsLoaded] = useState(false);
+
+  const [toast, setToast] = useState<string | null>(null);
 
   // Load data from localStorage
   useEffect(() => {
     const storedPlan = localStorage.getItem("fitlog-plan");
     const storedSaved = localStorage.getItem("fitlog-saved");
-    const storedCompleted = localStorage.getItem("fitlog-completed");
+    const storedCompleted = localStorage.getItem(
+      "fitlog-completed"
+    );
 
     if (storedPlan) {
       const parsedPlan: Workout[] = JSON.parse(storedPlan);
@@ -59,11 +63,10 @@ export function WorkoutProvider({
       setCompleted(JSON.parse(storedCompleted));
     }
 
-    // Loading finished
     setIsLoaded(true);
   }, []);
 
-  // Save plan after localStorage has loaded
+  // Save plan
   useEffect(() => {
     if (!isLoaded) return;
 
@@ -92,6 +95,15 @@ export function WorkoutProvider({
       JSON.stringify(completed)
     );
   }, [completed, isLoaded]);
+
+  // Toast
+  const showToast = (message: string) => {
+    setToast(message);
+
+    setTimeout(() => {
+      setToast(null);
+    }, 2500);
+  };
 
   // Add workout to today's plan
   const addToPlan = (workout: Workout) => {
@@ -189,9 +201,18 @@ export function WorkoutProvider({
         isCompleted,
         isInPlan,
         isSaved,
+        showToast,
       }}
     >
       {children}
+
+      {/* Toast */}
+      {toast && (
+        <div className="fixed bottom-6 right-6 z-50 rounded-lg border border-[#ccff00]/30 bg-[#171717] px-5 py-3 text-sm font-bold text-white shadow-2xl">
+          <span className="mr-2 text-[#ccff00]">✓</span>
+          {toast}
+        </div>
+      )}
     </WorkoutContext.Provider>
   );
 }
