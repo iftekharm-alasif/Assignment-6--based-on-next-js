@@ -14,25 +14,25 @@ interface WorkoutContextType {
   plan: Workout[];
   saved: Workout[];
   completed: number[];
-
   addToPlan: (workout: Workout) => void;
   removeFromPlan: (id: number) => void;
-
   saveWorkout: (workout: Workout) => void;
   removeFromSaved: (id: number) => void;
-
   markAsDone: (id: number) => void;
   isCompleted: (id: number) => boolean;
-
   isInPlan: (id: number) => boolean;
   isSaved: (id: number) => boolean;
 }
 
-const WorkoutContext = createContext<WorkoutContextType | undefined>(
-  undefined
-);
+const WorkoutContext = createContext<
+  WorkoutContextType | undefined
+>(undefined);
 
-export function WorkoutProvider({ children }: { children: ReactNode }) {
+export function WorkoutProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const [plan, setPlan] = useState<Workout[]>([]);
   const [saved, setSaved] = useState<Workout[]>([]);
   const [completed, setCompleted] = useState<number[]>([]);
@@ -46,10 +46,10 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
     const storedSaved = localStorage.getItem("fitlog-saved");
     const storedCompleted = localStorage.getItem("fitlog-completed");
 
-  if (storedPlan) {
-  const parsedPlan: Workout[] = JSON.parse(storedPlan);
-  setPlan(parsedPlan);
-}
+    if (storedPlan) {
+      const parsedPlan: Workout[] = JSON.parse(storedPlan);
+      setPlan(parsedPlan);
+    }
 
     if (storedSaved) {
       setSaved(JSON.parse(storedSaved));
@@ -67,14 +67,20 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!isLoaded) return;
 
-    localStorage.setItem("fitlog-plan", JSON.stringify(plan));
+    localStorage.setItem(
+      "fitlog-plan",
+      JSON.stringify(plan)
+    );
   }, [plan, isLoaded]);
 
   // Save saved workouts
   useEffect(() => {
     if (!isLoaded) return;
 
-    localStorage.setItem("fitlog-saved", JSON.stringify(saved));
+    localStorage.setItem(
+      "fitlog-saved",
+      JSON.stringify(saved)
+    );
   }, [saved, isLoaded]);
 
   // Save completed workouts
@@ -94,7 +100,11 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
         return currentPlan;
       }
 
-      if (currentPlan.some((item) => item.id === workout.id)) {
+      if (
+        currentPlan.some(
+          (item) => item.id === workout.id
+        )
+      ) {
         return currentPlan;
       }
 
@@ -105,14 +115,20 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
   // Remove workout from today's plan
   const removeFromPlan = (id: number) => {
     setPlan((currentPlan) =>
-      currentPlan.filter((workout) => workout.id !== id)
+      currentPlan.filter(
+        (workout) => workout.id !== id
+      )
     );
   };
 
   // Save workout
   const saveWorkout = (workout: Workout) => {
     setSaved((currentSaved) => {
-      if (currentSaved.some((item) => item.id === workout.id)) {
+      if (
+        currentSaved.some(
+          (item) => item.id === workout.id
+        )
+      ) {
         return currentSaved;
       }
 
@@ -123,7 +139,9 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
   // Remove saved workout
   const removeFromSaved = (id: number) => {
     setSaved((currentSaved) =>
-      currentSaved.filter((workout) => workout.id !== id)
+      currentSaved.filter(
+        (workout) => workout.id !== id
+      )
     );
   };
 
@@ -145,12 +163,16 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
 
   // Check if workout is already in plan
   const isInPlan = (id: number) => {
-    return plan.some((workout) => workout.id === id);
+    return plan.some(
+      (workout) => workout.id === id
+    );
   };
 
   // Check if workout is saved
   const isSaved = (id: number) => {
-    return saved.some((workout) => workout.id === id);
+    return saved.some(
+      (workout) => workout.id === id
+    );
   };
 
   return (
@@ -178,7 +200,9 @@ export function useWorkout() {
   const context = useContext(WorkoutContext);
 
   if (!context) {
-    throw new Error("useWorkout must be used inside WorkoutProvider");
+    throw new Error(
+      "useWorkout must be used inside WorkoutProvider"
+    );
   }
 
   return context;

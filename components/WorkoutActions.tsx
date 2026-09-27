@@ -1,6 +1,7 @@
 "use client";
 
 import type { Workout } from "@/types/workout";
+
 import { useWorkout } from "@/context/WorkoutContext";
 
 interface WorkoutActionsProps {
@@ -32,7 +33,6 @@ const WorkoutActions = ({ workout }: WorkoutActionsProps) => {
         }`}
       >
         <span>⊞</span>
-
         {alreadyInPlan
           ? "Already in plan"
           : "Add to today's plan"}
@@ -50,7 +50,6 @@ const WorkoutActions = ({ workout }: WorkoutActionsProps) => {
         }`}
       >
         <span>♡</span>
-
         {alreadySaved ? "Saved" : "Save for later"}
       </button>
     </div>
