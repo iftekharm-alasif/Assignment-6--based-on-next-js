@@ -7,9 +7,11 @@ import { useWorkout } from "@/context/WorkoutContext";
 import PlanWorkoutCard from "@/components/PlanWorkoutCard";
 
 type Tab = "plan" | "saved";
+type SortOption = "duration" | "calories" | "rating";
 
 const MyPlanPage = () => {
   const [activeTab, setActiveTab] = useState<Tab>("plan");
+  const [sortBy, setSortBy] = useState<SortOption>("duration");
 
   const { plan, saved } = useWorkout();
 
@@ -24,6 +26,18 @@ const MyPlanPage = () => {
   );
 
   const activeWorkouts = activeTab === "plan" ? plan : saved;
+
+  const sortedWorkouts = [...activeWorkouts].sort((a, b) => {
+    if (sortBy === "duration") {
+      return a.duration - b.duration;
+    }
+
+    if (sortBy === "calories") {
+      return a.caloriesBurned - b.caloriesBurned;
+    }
+
+    return b.rating - a.rating;
+  });
 
   return (
     <main className="min-h-screen bg-[#0d0d0d] px-5 py-12 md:px-8 md:py-20">
@@ -103,8 +117,31 @@ const MyPlanPage = () => {
           </button>
         </div>
 
+        {/* Sort */}
+        <div className="mt-8 flex items-center justify-end gap-3">
+          <label
+            htmlFor="my-plan-sort"
+            className="text-xs font-bold uppercase tracking-wider text-white/50"
+          >
+            Sort By
+          </label>
+
+          <select
+            id="my-plan-sort"
+            value={sortBy}
+            onChange={(event) =>
+              setSortBy(event.target.value as SortOption)
+            }
+            className="rounded-lg border border-white/10 bg-[#171920] px-4 py-2 text-sm font-medium text-white outline-none"
+          >
+            <option value="duration">Duration</option>
+            <option value="calories">Calories</option>
+            <option value="rating">Rating</option>
+          </select>
+        </div>
+
         {/* Workout List */}
-        <section className="mt-8">
+        <section className="mt-6">
           {activeWorkouts.length === 0 ? (
             <div className="border border-dashed border-white/20 py-20 text-center">
               <h2 className="text-2xl font-black uppercase text-white">
@@ -124,7 +161,7 @@ const MyPlanPage = () => {
             </div>
           ) : (
             <div className="grid gap-5 md:grid-cols-2">
-              {activeWorkouts.map((workout) => (
+              {sortedWorkouts.map((workout) => (
                 <PlanWorkoutCard
                   key={workout.id}
                   workout={workout}
